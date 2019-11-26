@@ -1,6 +1,5 @@
 using CSV, DataFrames, Suppressor, LinearAlgebra
-include("path_generation.jl")
-
+#include("path_generation.jl")
 
 # Compute cost matrix based on shortest paths for specified terminals
 function compute_cost_matrix_using_shortest_path(

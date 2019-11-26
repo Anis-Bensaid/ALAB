@@ -122,6 +122,10 @@ function AStar(network, startNode, endNode)
     return (missing, Inf)
 end
 
+function ProcessPath(path)
+    return path[findall([node.name for node in path] .== path[1].name)[end]:end]
+end
+
 ## DEFINE HELPER FUNCTIONS #####################################################
 function AdjMat(edges, n)
     adj = zeros(n,n)
@@ -231,9 +235,9 @@ function K_ShortestPaths(K, NodeCoords, Edges, distMat, sources, sinks, toPrint)
                     removeEdge(tempGraph, rootPath[idx+1], rootPath[idx])
                 end
 
-
                 newPath, val = AStar(tempGraph, spurNode, endNode)
                 if newPath !== missing
+                    newPath = ProcessPath(newPath)
                     totPath = vcat(rootPath[1:end-1], newPath)
                     enqueue!(Potential, totPath, val + rootPath[end].f)
                 end
