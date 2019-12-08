@@ -163,14 +163,43 @@ function BuildGraph(coord, branches, distMat)
 end
 
 function PlotInitialGraph(NodeCoords, Edges)
-    P = scatter(NodeCoords[:,2], NodeCoords[:,3])
+
+    NodeCoords[:,2] .+= abs.(minimum(NodeCoords[:,2]))
+    NodeCoords[:,2] .*= 5/maximum(NodeCoords[:,2])
+    NodeCoords[:,3] .+= abs.(minimum(NodeCoords[:,3]))
+    NodeCoords[:,3] .*= 1/maximum(NodeCoords[:,3])
+
+    P = plot()
+    for idx =1:size(NodeCoords, 1)
+        try
+            parse(Int, NodeCoords[idx,1])
+            scatter!(P, [NodeCoords[idx,2]], [NodeCoords[idx,3]], color = "darkgray",
+                    markersize = 2)
+        catch
+            x = NodeCoords[idx, 2]
+            y = NodeCoords[idx, 3]
+
+            if NodeCoords[idx,1] == "KM5"
+                scatter!(P, [x], [y], color = "red", markeralpha = 0.8,
+                annotations = (x-0.07, y, Plots.text(NodeCoords[idx,1], 7,
+                 :right, "courier", :red)), markersize = 5)
+
+            else
+            scatter!(P, [x], [y], color = "blue", markeralpha = 0.8,
+             annotations = (x+0.08, y, Plots.text(NodeCoords[idx,1],
+             7, :left, "courier")), markersize = 5)
+            end
+        end
+    end
+
     for b=1:size(Edges,1)
-        #x = [NodeCoords[findfirst(x->x==i, NodeCoords[:,1]), 2] for i in Edges[b, :]]
-        #y = [NodeCoords[findfirst(x->x==i, NodeCoords[:,1]), 3] for i in Edges[b, :]]
         x = [NodeCoords[i,2] for i in Edges[b, :]]
         y = [NodeCoords[i,3] for i in Edges[b, :]]
         plot!(P, x, y, color = "black", linewidth = 0.6, legend = false)
     end
+    xlims!(P, (-0.2, 6))
+    xlabel!(P, "Km")
+    ylabel!(P, "Km")
     return P
 end
 
@@ -233,7 +262,6 @@ function K_ShortestPaths(K, NodeCoords, Edges, distMat, sources, sinks, toPrint)
 
                 newPath, val = AStar(tempGraph, spurNode, endNode)
                 if newPath !== missing
-                    newPath = ProcessPath(newPath)
                     totPath = vcat(rootPath[1:end-1], newPath)
                     enqueue!(Potential, totPath, val + rootPath[end].f)
                 end
