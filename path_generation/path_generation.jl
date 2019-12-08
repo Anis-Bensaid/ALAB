@@ -122,10 +122,6 @@ function AStar(network, startNode, endNode)
     return (missing, Inf)
 end
 
-function ProcessPath(path)
-    return path[findall([node.name for node in path] .== path[1].name)[end]:end]
-end
-
 ## DEFINE HELPER FUNCTIONS #####################################################
 function AdjMat(edges, n)
     adj = zeros(n,n)

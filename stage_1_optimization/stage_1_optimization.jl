@@ -100,8 +100,8 @@ function solve_network_flow(
     @constraint(model, z .<= A)
     @constraint(model, x[2:num_nodes, :, :, :, :, :] .<= max_capacity*z[2:num_nodes, :, :, :, :, :])
     @constraint(model, x[:, 2:num_nodes, :, :, :, :] .<= max_capacity*z[:, 2:num_nodes, :, :, :, :])
-    @constraint(model, x[1, 1, :, :, :, 1] .<= total_demand*z[1, 1, :, :, :, 1])
-    @constraint(model, x[1, 1, :, :, :, 2] .<= total_supply*z[1, 1, :, :, :, 2])
+    #@constraint(model, x[1, 1, :, :, :, 1] .<= total_demand*z[1, 1, :, :, :, 1])
+    #@constraint(model, x[1, 1, :, :, :, 2] .<= total_supply*z[1, 1, :, :, :, 2])
 
     #Set locomative conservation constraints
     @constraint(model, [t=1:num_periods-1],
